@@ -9,13 +9,6 @@ public class SignalManager : MonoBehaviour
     public TextMeshProUGUI infoText;
     private bool trainInRedZone = false;
 
-    [Header("Signal Visuals")]
-    public SignalVisual redSignalVisual;
-
-    [Header("Green Visual Settings")]
-    public Material greenMat;
-    public string greenHex = "#00FF00";
-
     [Header("Stop Rules")]
     public float stoppedSpeed = 0.5f;
     public float redStopTolerance = 10f;
@@ -24,6 +17,7 @@ public class SignalManager : MonoBehaviour
     private bool hasFailedSignal = false;
     private bool redSignalCleared = false;
     private float stoppedTimer = 0f;
+    private float activeRedSignalX = -1f;
 
     public void SetTrainInRedZone(bool inside)
     {
@@ -32,23 +26,45 @@ public class SignalManager : MonoBehaviour
 
     private void Update()
     {
-        float yellowSignalDistance = routeData.yellowSignalX;
-        float redSignalDistance = routeData.redSignalX;
+        if (routeData == null || train == null)
+        {
+            return;
+        }
 
         float trainDistance = train.distanceAlongRoute;
-        float distanceToRed = redSignalDistance - trainDistance;
+
+        bool hasRedAhead = routeData.TryGetNextRedSignal(trainDistance, out float redSignalDistance);
+        bool hasYellowAhead = routeData.TryGetNextYellowSignal(trainDistance, out float yellowSignalDistance);
+
+        if (!hasRedAhead)
+        {
+            if (infoText != null)
+            {
+                infoText.text = "GREEN - End of route";
+            }
+
+            return;
+        }
+
+        if (activeRedSignalX != redSignalDistance)
+        {
+            activeRedSignalX = redSignalDistance;
+            redSignalCleared = false;
+            hasFailedSignal = false;
+            stoppedTimer = 0f;
+        }
 
         bool atRedSignal = trainInRedZone;
         bool trainStopped = train.speed <= stoppedSpeed;
         bool passedRed = trainDistance > redSignalDistance + redStopTolerance;
 
-        string message = "";
+        string message;
 
         if (redSignalCleared)
         {
             message = "GREEN - Proceed";
         }
-        else if (trainDistance < yellowSignalDistance)
+        else if (!hasYellowAhead || trainDistance < yellowSignalDistance)
         {
             message = "GREEN";
         }
@@ -61,7 +77,6 @@ public class SignalManager : MonoBehaviour
             message = "RED - STOP";
         }
 
-        // Stopped correctly at red
         if (!hasFailedSignal && !redSignalCleared && atRedSignal && trainStopped)
         {
             stoppedTimer += Time.deltaTime;
@@ -70,12 +85,6 @@ public class SignalManager : MonoBehaviour
             if (stoppedTimer >= waitTimeBeforeGreen)
             {
                 redSignalCleared = true;
-
-                if (redSignalVisual != null)
-                {
-                    redSignalVisual.SetSignal(greenMat, greenHex);
-                }
-
                 message = "Signal cleared - proceed";
             }
         }
@@ -84,7 +93,6 @@ public class SignalManager : MonoBehaviour
             stoppedTimer = 0f;
         }
 
-        // SPAD fail
         if (!hasFailedSignal && !redSignalCleared && passedRed && train.speed > stoppedSpeed)
         {
             hasFailedSignal = true;

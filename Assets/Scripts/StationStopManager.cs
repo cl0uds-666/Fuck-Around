@@ -5,20 +5,40 @@ public class StationStopManager : MonoBehaviour
 {
     [Header("References")]
     public TrainController train;
-    public RouteData routeData; // NEW
+    public RouteData routeData;
     public TextMeshProUGUI distanceText;
     public TextMeshProUGUI resultText;
 
     [Header("Station Settings")]
-    public float stopTolerance = 5f;       // +/- metres allowed
-    public float stoppedSpeed = 0.5f;      // counts as stopped
+    public float stopTolerance = 5f;
+    public float stoppedSpeed = 0.5f;
 
-    private bool hasCheckedStop = false;
+    private int stationIndex = 0;
 
     private void Update()
     {
-        float stationDistance = routeData.stationX; // NEW
+        if (routeData == null || train == null || routeData.stationPositions.Count == 0)
+        {
+            return;
+        }
 
+        while (stationIndex < routeData.stationPositions.Count &&
+               train.distanceAlongRoute > routeData.stationPositions[stationIndex] + stopTolerance)
+        {
+            stationIndex++;
+        }
+
+        if (stationIndex >= routeData.stationPositions.Count)
+        {
+            if (distanceText != null)
+            {
+                distanceText.text = "Station: End of route";
+            }
+
+            return;
+        }
+
+        float stationDistance = routeData.stationPositions[stationIndex];
         float distanceToStation = stationDistance - train.distanceAlongRoute;
 
         if (distanceText != null)
@@ -29,16 +49,15 @@ public class StationStopManager : MonoBehaviour
         bool insideStopZone = Mathf.Abs(distanceToStation) <= stopTolerance;
         bool trainStopped = train.speed <= stoppedSpeed;
 
-        if (!hasCheckedStop && insideStopZone && trainStopped)
+        if (insideStopZone && trainStopped)
         {
             resultText.text = "Perfect stop - passengers collected!";
-            hasCheckedStop = true;
+            stationIndex++;
         }
-
-        if (!hasCheckedStop && distanceToStation < -stopTolerance)
+        else if (distanceToStation < -stopTolerance)
         {
             resultText.text = "Overshot station - passengers missed!";
-            hasCheckedStop = true;
+            stationIndex++;
         }
     }
 }

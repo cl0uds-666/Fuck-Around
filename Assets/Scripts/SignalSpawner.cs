@@ -7,12 +7,6 @@ public class SignalSpawner : MonoBehaviour
     public RouteData routeData;
     public SignalManager signalManager;
 
-
-    //[Header("Signal Positions")]
-    //public float greenSignalX = 250f;
-    //public float yellowSignalX = 500f;
-    //public float redSignalX = 750f;
-
     [Header("Placement")]
     public float zOffset = 5f;
     public float yRotation = -90f;
@@ -29,13 +23,28 @@ public class SignalSpawner : MonoBehaviour
 
     private void Start()
     {
-        SpawnSignal(routeData.greenSignalX, greenMat, greenHex, "Green Signal");
-        SpawnSignal(routeData.yellowSignalX, yellowMat, yellowHex, "Yellow Signal");
-        SpawnSignal(routeData.redSignalX, redMat, redHex, "Red Signal");
+        if (routeData == null)
+        {
+            return;
+        }
+
+        foreach (float greenX in routeData.greenSignalPositions)
+        {
+            SpawnSignal(greenX, greenMat, greenHex, "Green Signal", false);
+        }
+
+        foreach (float yellowX in routeData.yellowSignalPositions)
+        {
+            SpawnSignal(yellowX, yellowMat, yellowHex, "Yellow Signal", false);
+        }
+
+        foreach (float redX in routeData.redSignalPositions)
+        {
+            SpawnSignal(redX, redMat, redHex, "Red Signal", true);
+        }
     }
 
-
-    private void SpawnSignal(float xPosition, Material material, string hexColour, string signalName)
+    private void SpawnSignal(float xPosition, Material material, string hexColour, string signalName, bool isRed)
     {
         Vector3 position = new Vector3(xPosition, transform.position.y, zOffset);
         Quaternion rotation = Quaternion.Euler(0f, yRotation, 0f);
@@ -50,17 +59,12 @@ public class SignalSpawner : MonoBehaviour
             visual.SetSignal(material, hexColour);
         }
 
-        if (signalName == "Red Signal" && signalManager != null)
-        {
-            signalManager.redSignalVisual = visual;
-        }
-
         SignalStopTrigger stopTrigger = signal.GetComponentInChildren<SignalStopTrigger>();
 
         if (stopTrigger != null)
         {
             stopTrigger.signalManager = signalManager;
-            stopTrigger.isRedSignalTrigger = signalName == "Red Signal";
+            stopTrigger.isRedSignalTrigger = isRed;
         }
     }
 }
