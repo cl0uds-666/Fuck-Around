@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a3dbe0c71e82d0740b40cbf094e9adf5
+timeCreated: 1490734430
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Raised_Bridge_Straight_01.prefab
+  uploadId: 614092

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: afbb28eb88e6dbf4884b7ec4d4e64ada
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Scenes/URP/14 CreatePipesSystem/indicatorCreatingMaterial.mat
+  uploadId: 863580

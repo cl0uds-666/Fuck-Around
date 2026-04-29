@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ef78af745075620429243198a92f3107
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Materials/URP/medival_gate_hide-material.mat
+  uploadId: 863580

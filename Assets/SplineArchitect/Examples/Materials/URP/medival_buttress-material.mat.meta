@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 01b074e72e83dbd42ad13f73d6c32290
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Materials/URP/medival_buttress-material.mat
+  uploadId: 863580

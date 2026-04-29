@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a446661e2ddf11a40b5ea82b5b4ef5ae
+timeCreated: 1490734424
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Vehicles/SM_Veh_Carriage_Empty_03.prefab
+  uploadId: 614092

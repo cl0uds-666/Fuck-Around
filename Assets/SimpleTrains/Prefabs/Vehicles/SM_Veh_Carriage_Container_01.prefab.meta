@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5f43b357527c6e64dad6e5bbc8ffe66a
+timeCreated: 1490734425
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Vehicles/SM_Veh_Carriage_Container_01.prefab
+  uploadId: 614092

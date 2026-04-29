@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6d90817825396c3418f9efe7ffe3d3a4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Scenes/URP/02 MeshDeformation2/CameraLookAtPoint.controller
+  uploadId: 863580

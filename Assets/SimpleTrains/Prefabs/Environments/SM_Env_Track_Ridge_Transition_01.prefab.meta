@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fbfc0e988c2cf0b4e9932d648195505a
+timeCreated: 1490734426
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Ridge_Transition_01.prefab
+  uploadId: 614092

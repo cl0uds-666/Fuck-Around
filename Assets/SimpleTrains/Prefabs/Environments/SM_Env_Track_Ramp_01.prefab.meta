@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ff2f8685da7c6434d98f9d256236b4a7
+timeCreated: 1490734425
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Ramp_01.prefab
+  uploadId: 614092

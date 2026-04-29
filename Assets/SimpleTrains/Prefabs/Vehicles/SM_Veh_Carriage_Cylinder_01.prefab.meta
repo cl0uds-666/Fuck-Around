@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 17b3f250042a9eb439869ff9198904df
+timeCreated: 1490734425
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Vehicles/SM_Veh_Carriage_Cylinder_01.prefab
+  uploadId: 614092

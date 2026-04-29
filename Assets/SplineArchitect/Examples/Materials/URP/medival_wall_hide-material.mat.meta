@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: bfa03295d6d26c14d97a74ca4829f9d0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Materials/URP/medival_wall_hide-material.mat
+  uploadId: 863580

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3cf33d51e65b769489be8afd58e4e0ba
+timeCreated: 1490734427
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Props/SM_Prop_Cable_Wires_01.prefab
+  uploadId: 614092

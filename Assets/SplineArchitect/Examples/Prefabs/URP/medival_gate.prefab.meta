@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fae01b27300e88548875955bb352412a
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Prefabs/URP/medival_gate.prefab
+  uploadId: 863580

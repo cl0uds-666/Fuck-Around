@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a2cf60a3a3fe9c04c930db71925b8c4d
+timeCreated: 1490831540
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_SubwayEntrance_01.prefab
+  uploadId: 614092

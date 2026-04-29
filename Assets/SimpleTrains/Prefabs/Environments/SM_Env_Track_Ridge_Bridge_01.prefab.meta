@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0cead1751a044bf479fd75bc4ec9e350
+timeCreated: 1490734431
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Ridge_Bridge_01.prefab
+  uploadId: 614092

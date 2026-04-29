@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb47e57df6d651d44b9e88061f5e8cbd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Materials/URP/medival_buttress_hide-material.mat
+  uploadId: 863580

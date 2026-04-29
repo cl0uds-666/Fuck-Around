@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cf6865a4cca19a14780bba1896dab121
+timeCreated: 1490734429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Raised_Corner_01.prefab
+  uploadId: 614092

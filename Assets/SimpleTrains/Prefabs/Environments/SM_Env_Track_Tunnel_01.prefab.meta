@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a5779502d2edcdc45941bf15e657cda4
+timeCreated: 1490734428
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Tunnel_01.prefab
+  uploadId: 614092

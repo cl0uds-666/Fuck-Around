@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 923805f21f60f7040945054c19f7ea07
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Scenes/URP/14 CreatePipesSystem/IndicatorClick.prefab
+  uploadId: 863580

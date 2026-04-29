@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3c1dff512d2f72d4dbcb2e70b1f7dd5d
+timeCreated: 1490734427
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Buildings/SM_Bld_Signal_Tower_02.prefab
+  uploadId: 614092

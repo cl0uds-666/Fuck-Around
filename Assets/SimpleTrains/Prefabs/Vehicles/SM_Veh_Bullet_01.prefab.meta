@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b11507e343bdabb42ad7da0072f20c6c
+timeCreated: 1490734429
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Vehicles/SM_Veh_Bullet_01.prefab
+  uploadId: 614092

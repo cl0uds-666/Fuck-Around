@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2b7b7c2a95000bd48be2ea3c71356524
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Prefabs/URP/medival_buttress.prefab
+  uploadId: 863580

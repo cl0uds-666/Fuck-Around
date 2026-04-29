@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2fc51148c10cff14ba81aa638cec545e
+timeCreated: 1490734426
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Buildings/SM_Bld_Station_Small_01.prefab
+  uploadId: 614092

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dd75aabd32084b449b09226528489cc4
+timeCreated: 1490734430
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Hills_02.prefab
+  uploadId: 614092

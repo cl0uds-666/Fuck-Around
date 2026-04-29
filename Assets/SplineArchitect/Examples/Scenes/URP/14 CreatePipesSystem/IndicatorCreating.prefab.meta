@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fb76e11dd17ded04897995b4d9071c06
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Scenes/URP/14 CreatePipesSystem/IndicatorCreating.prefab
+  uploadId: 863580

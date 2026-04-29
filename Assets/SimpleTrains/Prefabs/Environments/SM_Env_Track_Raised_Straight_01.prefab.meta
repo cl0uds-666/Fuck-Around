@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a39c519e9cd3a3446aa156add57f3e41
+timeCreated: 1490734428
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 86794
+  packageName: Simple Trains - Cartoon Assets
+  packageVersion: 1.0
+  assetPath: Assets/SimpleTrains/Prefabs/Environments/SM_Env_Track_Raised_Straight_01.prefab
+  uploadId: 614092

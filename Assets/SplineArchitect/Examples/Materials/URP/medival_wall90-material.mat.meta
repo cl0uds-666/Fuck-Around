@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f32f109a1fe3895478491de9d726d1fb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Materials/URP/medival_wall90-material.mat
+  uploadId: 863580

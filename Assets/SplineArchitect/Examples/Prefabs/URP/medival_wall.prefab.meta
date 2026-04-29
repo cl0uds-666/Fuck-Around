@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1ab585fbd4ba22d4f84dcd005c076331
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Prefabs/URP/medival_wall.prefab
+  uploadId: 863580

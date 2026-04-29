@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a0b9eb190dd7c60438307b440cc355cb
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 324111
+  packageName: Spline Architect
+  packageVersion: 2.1.2
+  assetPath: Assets/SplineArchitect/Examples/Scenes/URP/14 CreatePipesSystem/Connection.prefab
+  uploadId: 863580
