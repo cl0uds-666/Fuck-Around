@@ -5,19 +5,27 @@ public class StationPassengerTrigger : MonoBehaviour
 {
     [Header("References")]
     public TrainController train;
+    public TrainPassengerManager passengerManager;
     public GameObject passengerPrefab;
 
-    [Header("Passenger Spawn")]
-    public Transform[] passengerSpawnPoints;
-    public Transform passengerTargetPoint;
-    public int passengerCount = 6;
+    [Header("Boarding (Platform -> Train)")]
+    public Transform[] platformSpawnPoints;
+    public Transform trainBoardTargetPoint;
+    public int maxBoardingAttempt = 12;
+
+    [Header("Exiting (Train -> Platform)")]
+    public Transform[] trainExitSpawnPoints;
+    public Transform platformExitTargetPoint;
+    public int maxExitingAttempt = 8;
+
+    [Header("Timing")]
     public float spawnDelay = 0.3f;
 
     [Header("Stop Check")]
     public float stoppedSpeed = 0.5f;
 
     private bool trainInsideStation = false;
-    private bool passengersSpawned = false;
+    private bool transferStarted = false;
 
     private void Awake()
     {
@@ -25,42 +33,101 @@ public class StationPassengerTrigger : MonoBehaviour
         {
             train = FindFirstObjectByType<TrainController>();
         }
+
+        if (passengerManager == null)
+        {
+            passengerManager = FindFirstObjectByType<TrainPassengerManager>();
+        }
     }
 
     private void Update()
     {
-        if (passengersSpawned)
+        if (transferStarted)
         {
             return;
         }
 
-        if (trainInsideStation && train.speed <= stoppedSpeed)
+        if (trainInsideStation && train != null && train.speed <= stoppedSpeed)
         {
-            passengersSpawned = true;
-            StartCoroutine(SpawnPassengers());
+            transferStarted = true;
+            StartCoroutine(HandlePassengerTransfer());
         }
     }
 
-    private IEnumerator SpawnPassengers()
+    private IEnumerator HandlePassengerTransfer()
     {
-        for (int i = 0; i < passengerCount; i++)
+        int exitCount = 0;
+        int boardCount = 0;
+
+        if (passengerManager != null)
         {
-            Transform spawnPoint = passengerSpawnPoints[i % passengerSpawnPoints.Length];
+            exitCount = passengerManager.RemovePassengers(maxExitingAttempt);
+            yield return StartCoroutine(SpawnExitingPassengers(exitCount));
 
-            GameObject passenger = Instantiate(
-                passengerPrefab,
-                spawnPoint.position,
-                spawnPoint.rotation
-            );
+            boardCount = passengerManager.AvailableSpace > 0
+                ? Mathf.Min(maxBoardingAttempt, passengerManager.AvailableSpace)
+                : 0;
 
-            PassengerWalker walker = passenger.GetComponent<PassengerWalker>();
+            yield return StartCoroutine(SpawnBoardingPassengers(boardCount));
+        }
+        else
+        {
+            yield return StartCoroutine(SpawnExitingPassengers(maxExitingAttempt));
+            yield return StartCoroutine(SpawnBoardingPassengers(maxBoardingAttempt));
+        }
+    }
 
-            if (walker != null && passengerTargetPoint != null)
-            {
-                walker.SetTarget(passengerTargetPoint.position);
-            }
+    private IEnumerator SpawnExitingPassengers(int count)
+    {
+        if (passengerPrefab == null || platformExitTargetPoint == null || trainExitSpawnPoints == null || trainExitSpawnPoints.Length == 0)
+        {
+            yield break;
+        }
 
+        for (int i = 0; i < count; i++)
+        {
+            Transform spawnPoint = trainExitSpawnPoints[i % trainExitSpawnPoints.Length];
+            SpawnPassenger(spawnPoint, platformExitTargetPoint.position, PassengerWalker.PassengerFlow.Exiting);
             yield return new WaitForSeconds(spawnDelay);
+        }
+    }
+
+    private IEnumerator SpawnBoardingPassengers(int count)
+    {
+        if (passengerPrefab == null || trainBoardTargetPoint == null || platformSpawnPoints == null || platformSpawnPoints.Length == 0)
+        {
+            yield break;
+        }
+
+        for (int i = 0; i < count; i++)
+        {
+            Transform spawnPoint = platformSpawnPoints[i % platformSpawnPoints.Length];
+            SpawnPassenger(spawnPoint, trainBoardTargetPoint.position, PassengerWalker.PassengerFlow.Boarding);
+            yield return new WaitForSeconds(spawnDelay);
+        }
+    }
+
+    private void SpawnPassenger(Transform spawnPoint, Vector3 target, PassengerWalker.PassengerFlow flow)
+    {
+        GameObject passenger = Instantiate(passengerPrefab, spawnPoint.position, spawnPoint.rotation);
+        PassengerWalker walker = passenger.GetComponent<PassengerWalker>();
+
+        if (walker != null)
+        {
+            walker.Setup(target, flow, OnPassengerReachedTarget);
+        }
+    }
+
+    private void OnPassengerReachedTarget(PassengerWalker.PassengerFlow flow)
+    {
+        if (passengerManager == null)
+        {
+            return;
+        }
+
+        if (flow == PassengerWalker.PassengerFlow.Boarding)
+        {
+            passengerManager.AddPassengers(1);
         }
     }
 
