@@ -6,9 +6,6 @@ public class StationSpawner : MonoBehaviour
     public GameObject stationPrefab;
     public RouteData routeData;
 
-    [Header("Station Position")]
-    public float stationX = 800f;
-
     [Header("Placement")]
     public float zOffset = -6f;
     public float yOffset = 2.7f;
@@ -16,7 +13,15 @@ public class StationSpawner : MonoBehaviour
 
     private void Start()
     {
-        SpawnStation(routeData.stationX);
+        if (routeData == null || stationPrefab == null)
+        {
+            return;
+        }
+
+        foreach (float stationX in routeData.stationPositions)
+        {
+            SpawnStation(stationX);
+        }
     }
 
     private void SpawnStation(float xPosition)

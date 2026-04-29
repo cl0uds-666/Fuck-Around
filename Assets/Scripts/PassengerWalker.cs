@@ -1,7 +1,14 @@
+using System;
 using UnityEngine;
 
 public class PassengerWalker : MonoBehaviour
 {
+    public enum PassengerFlow
+    {
+        Boarding,
+        Exiting
+    }
+
     [Header("Movement")]
     public float moveSpeed = 2f;
     public float despawnDistance = 1f;
@@ -13,10 +20,14 @@ public class PassengerWalker : MonoBehaviour
     public float swingSpeed = 5f;
 
     private Vector3 targetPosition;
+    private Action<PassengerFlow> onReachedTarget;
+    private PassengerFlow flowType;
 
-    public void SetTarget(Vector3 target)
+    public void Setup(Vector3 target, PassengerFlow flow, Action<PassengerFlow> reachedCallback)
     {
         targetPosition = target;
+        flowType = flow;
+        onReachedTarget = reachedCallback;
     }
 
     private void Update()
@@ -42,6 +53,11 @@ public class PassengerWalker : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPosition) <= despawnDistance)
         {
+            if (onReachedTarget != null)
+            {
+                onReachedTarget(flowType);
+            }
+
             Destroy(gameObject);
         }
     }
