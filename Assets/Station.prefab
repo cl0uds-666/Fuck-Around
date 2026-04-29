@@ -766,15 +766,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   train: {fileID: 0}
+  passengerManager: {fileID: 0}
   passengerPrefab: {fileID: 5917445901788970718, guid: 2a4b0c54cb125454bbb8c797c18e1b4c, type: 3}
-  passengerSpawnPoints:
+  platformSpawnPoints:
   - {fileID: 7811224444220214552}
   - {fileID: 568103569870320134}
   - {fileID: 1536489102769431644}
+  - {fileID: 1009397662267648523}
   - {fileID: 6535343934008004353}
   - {fileID: 397851637302919490}
-  passengerTargetPoint: {fileID: 4854127838260784948}
-  passengerCount: 20
+  trainBoardTargetPoint: {fileID: 4854127838260784948}
+  maxBoardingAttempt: 12
+  trainExitSpawnPoints:
+  - {fileID: 4854127838260784948}
+  platformExitTargetPoint: {fileID: 1009397662267648523}
+  maxExitingAttempt: 8
   spawnDelay: 0.3
   stoppedSpeed: 0.5
 --- !u!1 &6697657265226477817
