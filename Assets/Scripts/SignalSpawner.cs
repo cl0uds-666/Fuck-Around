@@ -59,6 +59,11 @@ public class SignalSpawner : MonoBehaviour
             visual.SetSignal(material, hexColour);
         }
 
+        if (isRed && signalManager != null)
+        {
+            signalManager.RegisterRedSignalVisual(xPosition, visual);
+        }
+
         SignalStopTrigger stopTrigger = signal.GetComponentInChildren<SignalStopTrigger>();
 
         if (stopTrigger != null)

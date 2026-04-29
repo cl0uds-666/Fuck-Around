@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -9,6 +10,10 @@ public class SignalManager : MonoBehaviour
     public TextMeshProUGUI infoText;
     private bool trainInRedZone = false;
 
+    [Header("Green Visual Settings")]
+    public Material greenMat;
+    public string greenHex = "#00FF00";
+
     [Header("Stop Rules")]
     public float stoppedSpeed = 0.5f;
     public float redStopTolerance = 10f;
@@ -18,6 +23,16 @@ public class SignalManager : MonoBehaviour
     private bool redSignalCleared = false;
     private float stoppedTimer = 0f;
     private float activeRedSignalX = -1f;
+
+    private readonly Dictionary<float, SignalVisual> redSignalVisuals = new Dictionary<float, SignalVisual>();
+
+    public void RegisterRedSignalVisual(float redSignalX, SignalVisual visual)
+    {
+        if (visual != null)
+        {
+            redSignalVisuals[redSignalX] = visual;
+        }
+    }
 
     public void SetTrainInRedZone(bool inside)
     {
@@ -85,6 +100,7 @@ public class SignalManager : MonoBehaviour
             if (stoppedTimer >= waitTimeBeforeGreen)
             {
                 redSignalCleared = true;
+                SetRedSignalToGreen(redSignalDistance);
                 message = "Signal cleared - proceed";
             }
         }
@@ -102,6 +118,14 @@ public class SignalManager : MonoBehaviour
         if (infoText != null)
         {
             infoText.text = message;
+        }
+    }
+
+    private void SetRedSignalToGreen(float redSignalDistance)
+    {
+        if (redSignalVisuals.TryGetValue(redSignalDistance, out SignalVisual redVisual) && redVisual != null)
+        {
+            redVisual.SetSignal(greenMat, greenHex);
         }
     }
 }

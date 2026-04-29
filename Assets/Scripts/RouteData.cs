@@ -104,8 +104,29 @@ public class RouteData : MonoBehaviour
 
         for (float x = 0f; x <= routeLength; x += greenSignalSpacing)
         {
-            greenSignalPositions.Add(x);
+            if (!IsBetweenAnyYellowAndRed(x))
+            {
+                greenSignalPositions.Add(x);
+            }
         }
+    }
+
+    private bool IsBetweenAnyYellowAndRed(float x)
+    {
+        int pairCount = Mathf.Min(yellowSignalPositions.Count, redSignalPositions.Count);
+
+        for (int i = 0; i < pairCount; i++)
+        {
+            float yellowX = yellowSignalPositions[i];
+            float redX = redSignalPositions[i];
+
+            if (x > yellowX && x < redX)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public bool TryGetNextRedSignal(float trainX, out float redX)
