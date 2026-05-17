@@ -14,8 +14,6 @@ public class StationPassengerTrigger : MonoBehaviour
     public int maxBoardingAttempt = 12;
 
     [Header("Exiting (Train -> Platform)")]
-    public Transform[] trainExitSpawnPoints;
-    public Transform platformExitTargetPoint;
     public int maxExitingAttempt = 8;
 
     [Header("Timing")]
@@ -61,7 +59,11 @@ public class StationPassengerTrigger : MonoBehaviour
 
         if (passengerManager != null)
         {
-            exitCount = passengerManager.RemovePassengers(maxExitingAttempt);
+            if (passengerManager.currentPassengers > 0)
+            {
+                int randomExitRequest = Random.Range(1, maxExitingAttempt + 1);
+                exitCount = passengerManager.RemovePassengers(randomExitRequest);
+            }
             yield return StartCoroutine(SpawnExitingPassengers(exitCount));
 
             boardCount = passengerManager.AvailableSpace > 0
@@ -79,15 +81,15 @@ public class StationPassengerTrigger : MonoBehaviour
 
     private IEnumerator SpawnExitingPassengers(int count)
     {
-        if (passengerPrefab == null || platformExitTargetPoint == null || trainExitSpawnPoints == null || trainExitSpawnPoints.Length == 0)
+        if (passengerPrefab == null || trainBoardTargetPoint == null || platformSpawnPoints == null || platformSpawnPoints.Length == 0)
         {
             yield break;
         }
 
         for (int i = 0; i < count; i++)
         {
-            Transform spawnPoint = trainExitSpawnPoints[i % trainExitSpawnPoints.Length];
-            SpawnPassenger(spawnPoint, platformExitTargetPoint.position, PassengerWalker.PassengerFlow.Exiting);
+            Transform targetPoint = platformSpawnPoints[Random.Range(0, platformSpawnPoints.Length)];
+            SpawnPassenger(trainBoardTargetPoint, targetPoint.position, PassengerWalker.PassengerFlow.Exiting);
             yield return new WaitForSeconds(spawnDelay);
         }
     }
