@@ -14,7 +14,14 @@ public class StationPassengerTrigger : MonoBehaviour
     public int maxBoardingAttempt = 12;
 
     [Header("Exiting (Train -> Platform)")]
+    public Transform trainExitSpawnPoint;
+    public Transform platformExitMidPoint;
+    public Transform platformExitFinalPoint;
     public int maxExitingAttempt = 8;
+    public float exitMinTurnAngle = 70f;
+    public float exitMaxTurnAngle = 160f;
+    public float exitWanderDistance = 20f;
+    public float exitWanderSeconds = 10f;
 
     [Header("Timing")]
     public float spawnDelay = 0.3f;
@@ -81,15 +88,14 @@ public class StationPassengerTrigger : MonoBehaviour
 
     private IEnumerator SpawnExitingPassengers(int count)
     {
-        if (passengerPrefab == null || trainBoardTargetPoint == null || platformSpawnPoints == null || platformSpawnPoints.Length == 0)
+        if (passengerPrefab == null || trainExitSpawnPoint == null || platformExitMidPoint == null || platformExitFinalPoint == null)
         {
             yield break;
         }
 
         for (int i = 0; i < count; i++)
         {
-            Transform targetPoint = platformSpawnPoints[Random.Range(0, platformSpawnPoints.Length)];
-            SpawnPassenger(trainBoardTargetPoint, targetPoint.position, PassengerWalker.PassengerFlow.Exiting);
+            SpawnExitingPassengerTwoStage();
             yield return new WaitForSeconds(spawnDelay);
         }
     }
@@ -117,6 +123,25 @@ public class StationPassengerTrigger : MonoBehaviour
         if (walker != null)
         {
             walker.Setup(target, flow, OnPassengerReachedTarget);
+        }
+    }
+
+    private void SpawnExitingPassengerTwoStage()
+    {
+        GameObject passenger = Instantiate(passengerPrefab, trainExitSpawnPoint.position, trainExitSpawnPoint.rotation);
+        PassengerWalker walker = passenger.GetComponent<PassengerWalker>();
+
+        if (walker != null)
+        {
+            walker.SetupExitingTwoStage(
+                platformExitMidPoint.position,
+                platformExitFinalPoint.position,
+                exitMinTurnAngle,
+                exitMaxTurnAngle,
+                exitWanderDistance,
+                exitWanderSeconds,
+                OnPassengerReachedTarget
+            );
         }
     }
 
