@@ -22,13 +22,49 @@ public class PassengerWalker : MonoBehaviour
     private Vector3 targetPosition;
     private Action<PassengerFlow> onReachedTarget;
     private PassengerFlow flowType;
+    private bool hasSecondStageTarget = false;
+    private Vector3 secondStageTarget;
+    private bool inSecondStage = false;
+    private bool isWandering = false;
+    private float wanderTimer = 0f;
+    private float wanderDuration = 10f;
+    private float wanderMoveDistance = 20f;
 
     public void Setup(Vector3 target, PassengerFlow flow, Action<PassengerFlow> reachedCallback)
     {
         targetPosition = target;
         flowType = flow;
         onReachedTarget = reachedCallback;
+        hasSecondStageTarget = false;
+        inSecondStage = false;
+        isWandering = false;
+        wanderTimer = 0f;
     }
+
+    public void SetupExitingTwoStage(
+        Vector3 firstTarget,
+        Vector3 secondTarget,
+        float minTurnAngle,
+        float maxTurnAngle,
+        float wanderDistance,
+        float wanderSeconds,
+        Action<PassengerFlow> reachedCallback)
+    {
+        targetPosition = firstTarget;
+        secondStageTarget = secondTarget;
+        flowType = PassengerFlow.Exiting;
+        onReachedTarget = reachedCallback;
+        hasSecondStageTarget = true;
+        inSecondStage = false;
+        isWandering = false;
+        wanderMoveDistance = Mathf.Max(1f, wanderDistance);
+        wanderDuration = Mathf.Max(0.1f, wanderSeconds);
+        wanderTimer = 0f;
+        this.minTurnAngle = Mathf.Clamp(minTurnAngle, 0f, 180f);
+        this.maxTurnAngle = Mathf.Clamp(maxTurnAngle, this.minTurnAngle, 180f);
+    }
+    private float minTurnAngle = 70f;
+    private float maxTurnAngle = 160f;
 
     private void Update()
     {
@@ -53,13 +89,64 @@ public class PassengerWalker : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPosition) <= despawnDistance)
         {
-            if (onReachedTarget != null)
+            if (hasSecondStageTarget && !inSecondStage)
+            {
+                targetPosition = secondStageTarget;
+                inSecondStage = true;
+                return;
+            }
+
+            if (hasSecondStageTarget && inSecondStage && !isWandering)
+            {
+                BeginWander();
+                return;
+            }
+
+            if (!hasSecondStageTarget && onReachedTarget != null)
             {
                 onReachedTarget(flowType);
             }
 
             Destroy(gameObject);
         }
+
+        if (isWandering)
+        {
+            wanderTimer += Time.deltaTime;
+
+            if (wanderTimer >= wanderDuration)
+            {
+                if (onReachedTarget != null)
+                {
+                    onReachedTarget(flowType);
+                }
+
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private void BeginWander()
+    {
+        isWandering = true;
+        wanderTimer = 0f;
+
+        float turnAngle = UnityEngine.Random.Range(minTurnAngle, maxTurnAngle);
+        if (UnityEngine.Random.value < 0.5f)
+        {
+            turnAngle *= -1f;
+        }
+
+        Vector3 turnedDirection = Quaternion.AngleAxis(turnAngle, Vector3.up) * transform.forward;
+        turnedDirection.y = 0f;
+        turnedDirection.Normalize();
+
+        if (turnedDirection.sqrMagnitude < 0.001f)
+        {
+            turnedDirection = transform.right;
+        }
+
+        targetPosition = transform.position + turnedDirection * wanderMoveDistance;
     }
 
     private void SwingArms()
