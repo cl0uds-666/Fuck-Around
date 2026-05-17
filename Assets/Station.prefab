@@ -287,6 +287,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2529164684914648033}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2054756142752642616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2381611128533557580}
+  m_Layer: 0
+  m_Name: Spawn (6)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2381611128533557580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054756142752642616}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: -1.33}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2529164684914648033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2146720956801472123
 GameObject:
   m_ObjectHideFlags: 0
@@ -729,6 +760,8 @@ Transform:
   - {fileID: 1009397662267648523}
   - {fileID: 6535343934008004353}
   - {fileID: 397851637302919490}
+  - {fileID: 2381611128533557580}
+  - {fileID: 7453667548852827335}
   - {fileID: 4854127838260784948}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -777,10 +810,14 @@ MonoBehaviour:
   - {fileID: 397851637302919490}
   trainBoardTargetPoint: {fileID: 4854127838260784948}
   maxBoardingAttempt: 12
-  trainExitSpawnPoints:
-  - {fileID: 4854127838260784948}
-  platformExitTargetPoint: {fileID: 1009397662267648523}
-  maxExitingAttempt: 8
+  trainExitSpawnPoint: {fileID: 4854127838260784948}
+  platformExitMidPoint: {fileID: 2381611128533557580}
+  platformExitFinalPoint: {fileID: 7453667548852827335}
+  maxExitingAttempt: 15
+  exitMinTurnAngle: 70
+  exitMaxTurnAngle: 160
+  exitWanderDistance: 20
+  exitWanderSeconds: 10
   spawnDelay: 0.3
   stoppedSpeed: 0.5
 --- !u!1 &6697657265226477817
@@ -1065,6 +1102,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2529164684914648033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9111483917642265817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7453667548852827335}
+  m_Layer: 0
+  m_Name: Spawn (7)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7453667548852827335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9111483917642265817}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.23, y: 0.5, z: -1.33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
