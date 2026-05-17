@@ -4,7 +4,7 @@ public class TrainPassengerManager : MonoBehaviour
 {
     [Header("Capacity")]
     public int maxPassengers = 120;
-    public int currentPassengers = 40;
+    public int currentPassengers = 0;
 
     public int AvailableSpace
     {

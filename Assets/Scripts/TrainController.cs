@@ -46,6 +46,15 @@ public class TrainController : MonoBehaviour
     [Header("UI")]
     public Slider throttleSlider;
     public Slider brakeSlider;
+    public RectTransform doorCloser;
+
+    [Header("Door")]
+    public float doorClosedWidth = 0f;
+    public float doorOpenWidth = 45f;
+    public float doorWidthLerpSpeed = 120f;
+
+    private bool doorOpenRequested = false;
+    private float currentDoorWidth;
 
     [Header("Audio")]
     public AudioSource engineSource;
@@ -112,6 +121,7 @@ public class TrainController : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Enable();
+        InitializeDoorVisual();
     }
 
     private void OnDisable()
@@ -124,6 +134,8 @@ public class TrainController : MonoBehaviour
         previousSpeed = speed;
 
         HandleInput();
+        HandleDoorInput();
+        UpdateDoorVisual();
         ApplyMovement();
         UpdateUI();
 
@@ -180,6 +192,52 @@ public class TrainController : MonoBehaviour
 
         throttle = Mathf.Clamp01(throttle);
         brake = Mathf.Clamp01(brake);
+    }
+
+    private void HandleDoorInput()
+    {
+        if (Keyboard.current == null)
+        {
+            return;
+        }
+
+        if (Keyboard.current.dKey.wasPressedThisFrame)
+        {
+            doorOpenRequested = !doorOpenRequested;
+        }
+    }
+
+    private void InitializeDoorVisual()
+    {
+        currentDoorWidth = doorOpenRequested ? doorOpenWidth : doorClosedWidth;
+        ApplyDoorWidth(currentDoorWidth);
+    }
+
+    private void UpdateDoorVisual()
+    {
+        float targetWidth = doorOpenRequested ? doorOpenWidth : doorClosedWidth;
+        currentDoorWidth = Mathf.MoveTowards(currentDoorWidth, targetWidth, doorWidthLerpSpeed * Time.deltaTime);
+        ApplyDoorWidth(currentDoorWidth);
+    }
+
+    private void ApplyDoorWidth(float width)
+    {
+        if (doorCloser == null)
+        {
+            return;
+        }
+
+        Vector2 size = doorCloser.sizeDelta;
+        size.x = width;
+        doorCloser.sizeDelta = size;
+    }
+
+    public bool IsDoorOpen
+    {
+        get
+        {
+            return currentDoorWidth >= doorOpenWidth - 0.01f;
+        }
     }
 
     private float ApplyDeadzone(float value)

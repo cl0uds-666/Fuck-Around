@@ -52,11 +52,19 @@ public class StationPassengerTrigger : MonoBehaviour
             return;
         }
 
-        if (trainInsideStation && train != null && train.speed <= stoppedSpeed)
+        if (CanTransferPassengersNow())
         {
             transferStarted = true;
             StartCoroutine(HandlePassengerTransfer());
         }
+    }
+
+    private bool CanTransferPassengersNow()
+    {
+        return trainInsideStation
+            && train != null
+            && train.speed <= stoppedSpeed
+            && train.IsDoorOpen;
     }
 
     private IEnumerator HandlePassengerTransfer()
@@ -95,6 +103,7 @@ public class StationPassengerTrigger : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
+            yield return new WaitUntil(CanTransferPassengersNow);
             SpawnExitingPassengerTwoStage();
             yield return new WaitForSeconds(spawnDelay);
         }
@@ -109,6 +118,7 @@ public class StationPassengerTrigger : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
+            yield return new WaitUntil(CanTransferPassengersNow);
             Transform spawnPoint = platformSpawnPoints[i % platformSpawnPoints.Length];
             SpawnPassenger(spawnPoint, trainBoardTargetPoint.position, PassengerWalker.PassengerFlow.Boarding);
             yield return new WaitForSeconds(spawnDelay);
