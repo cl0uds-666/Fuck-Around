@@ -81,8 +81,7 @@ public class StartScreenController : MonoBehaviour
 
         if (cameraTransform != null && menuCameraAnchor != null)
         {
-            cameraTransform.SetParent(null, true);
-            cameraTransform.SetPositionAndRotation(menuCameraAnchor.position, menuCameraAnchor.rotation);
+            SnapCameraToAnchor(menuCameraAnchor);
         }
     }
 
@@ -147,6 +146,15 @@ public class StartScreenController : MonoBehaviour
         float duration = Mathf.Max(0.01f, cameraLerpDuration);
         float elapsed = 0f;
 
+        if (menuCameraAnchor != null)
+        {
+            SnapCameraToAnchor(menuCameraAnchor);
+        }
+        else
+        {
+            cameraTransform.SetParent(null, true);
+        }
+
         Vector3 fromPos = cameraTransform.position;
         Quaternion fromRot = cameraTransform.rotation;
         Vector3 toPos = gameplayCameraAnchor.position;
@@ -163,10 +171,8 @@ public class StartScreenController : MonoBehaviour
             yield return null;
         }
 
-        if (gameplayCameraParent != null)
-        {
-            cameraTransform.SetParent(gameplayCameraParent, true);
-        }
+        Transform gameplayParent = gameplayCameraParent != null ? gameplayCameraParent : gameplayCameraAnchor;
+        SnapCameraToAnchor(gameplayParent);
     }
 
     private void EnterInGameState()
@@ -235,6 +241,18 @@ public class StartScreenController : MonoBehaviour
 #endif
     }
 
+
+    private void SnapCameraToAnchor(Transform anchor)
+    {
+        if (cameraTransform == null || anchor == null)
+        {
+            return;
+        }
+
+        cameraTransform.SetParent(anchor, false);
+        cameraTransform.localPosition = Vector3.zero;
+        cameraTransform.localRotation = Quaternion.identity;
+    }
     private void SetGameplayEnabled(bool enabled)
     {
         if (gameplaySystems == null)
