@@ -131,8 +131,8 @@ public class PassengerWalker : MonoBehaviour
         isWandering = true;
         wanderTimer = 0f;
 
-        float turnAngle = Random.Range(minTurnAngle, maxTurnAngle);
-        if (Random.value < 0.5f)
+        float turnAngle = UnityEngine.Random.Range(minTurnAngle, maxTurnAngle);
+        if (UnityEngine.Random.value < 0.5f)
         {
             turnAngle *= -1f;
         }
