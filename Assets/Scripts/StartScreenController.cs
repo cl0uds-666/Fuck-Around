@@ -29,11 +29,12 @@ public class StartScreenController : MonoBehaviour
     [Header("Gameplay Scripts To Toggle")]
     public MonoBehaviour[] gameplaySystems;
 
-    [Header("Camera Intro")]
+    [Header("Camera Setup")]
     public Transform cameraTransform;
     public Transform menuCameraAnchor;
     public Transform gameplayCameraAnchor;
-    public float cameraLerpDuration = 3f;
+    public Transform gameplayCameraParent;
+    public float cameraLerpDuration = 2f;
 
     [Header("Intro Actor")]
     public PassengerWalker introPassengerPrefab;
@@ -80,6 +81,7 @@ public class StartScreenController : MonoBehaviour
 
         if (cameraTransform != null && menuCameraAnchor != null)
         {
+            cameraTransform.SetParent(null, true);
             cameraTransform.SetPositionAndRotation(menuCameraAnchor.position, menuCameraAnchor.rotation);
         }
     }
@@ -118,29 +120,6 @@ public class StartScreenController : MonoBehaviour
                 _ => introWalkerFinished = true);
         }
 
-        float duration = Mathf.Max(0.01f, cameraLerpDuration);
-        float elapsed = 0f;
-
-        Vector3 fromPos = cameraTransform != null ? cameraTransform.position : Vector3.zero;
-        Quaternion fromRot = cameraTransform != null ? cameraTransform.rotation : Quaternion.identity;
-
-        Vector3 toPos = gameplayCameraAnchor != null ? gameplayCameraAnchor.position : fromPos;
-        Quaternion toRot = gameplayCameraAnchor != null ? gameplayCameraAnchor.rotation : fromRot;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-
-            if (cameraTransform != null)
-            {
-                cameraTransform.position = Vector3.Lerp(fromPos, toPos, t);
-                cameraTransform.rotation = Quaternion.Slerp(fromRot, toRot, t);
-            }
-
-            yield return null;
-        }
-
         float fallbackTimer = 0f;
         while (introPassenger != null && !introWalkerFinished && fallbackTimer < fallbackIntroDuration)
         {
@@ -153,7 +132,41 @@ public class StartScreenController : MonoBehaviour
             Destroy(introPassenger.gameObject);
         }
 
+        yield return StartCoroutine(BlendCameraToGameplay());
+
         EnterInGameState();
+    }
+
+    private IEnumerator BlendCameraToGameplay()
+    {
+        if (cameraTransform == null || gameplayCameraAnchor == null)
+        {
+            yield break;
+        }
+
+        float duration = Mathf.Max(0.01f, cameraLerpDuration);
+        float elapsed = 0f;
+
+        Vector3 fromPos = cameraTransform.position;
+        Quaternion fromRot = cameraTransform.rotation;
+        Vector3 toPos = gameplayCameraAnchor.position;
+        Quaternion toRot = gameplayCameraAnchor.rotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            cameraTransform.position = Vector3.Lerp(fromPos, toPos, t);
+            cameraTransform.rotation = Quaternion.Slerp(fromRot, toRot, t);
+
+            yield return null;
+        }
+
+        if (gameplayCameraParent != null)
+        {
+            cameraTransform.SetParent(gameplayCameraParent, true);
+        }
     }
 
     private void EnterInGameState()
