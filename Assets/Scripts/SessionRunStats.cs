@@ -20,6 +20,9 @@ public class SessionRunStats : MonoBehaviour
     public float peakDeceleration;
     public float peakJerk;
 
+    [Header("Safety")]
+    public int spadCount;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -73,18 +76,21 @@ public class SessionRunStats : MonoBehaviour
 
     public void PrintRunSummary()
     {
+        string safetyClass = spadCount > 0 ? "MAJOR SAFETY VIOLATION" : "No major safety violations";
+
         Debug.Log(
-            "[SessionRunStats] Run Summary => " +
-            $"pickups: {passengerPickups}, " +
-            $"dropOffs: {passengerDropOffs}, " +
-            $"accurateStops: {accurateStops}, " +
-            $"missedStops: {missedStops}, " +
-            $"dwellTimeViolations: {dwellTimeViolations}, " +
-            $"harshBrakeCount: {harshBrakeCount}, " +
-            $"emergencyBrakeUsageCount: {emergencyBrakeUsageCount}, " +
-            $"peakBrakeSeverity: {peakBrakeSeverity:0.00}, " +
-            $"peakDeceleration: {peakDeceleration:0.00}, " +
-            $"peakJerk: {peakJerk:0.00}");
+            "[SessionRunStats] Run Summary\n" +
+            "Breakdown:\n" +
+            $"- Passenger: pickups={passengerPickups}, dropOffs={passengerDropOffs}\n" +
+            $"- Stops: accurateStops={accurateStops}, missedStops={missedStops}, dwellTimeViolations={dwellTimeViolations}\n" +
+            $"- Braking: harshBrakeCount={harshBrakeCount}, emergencyBrakeUsageCount={emergencyBrakeUsageCount}, peakBrakeSeverity={peakBrakeSeverity:0.00}, peakDeceleration={peakDeceleration:0.00}, peakJerk={peakJerk:0.00}\n" +
+            $"- Safety: spadCount={spadCount}, status={safetyClass}");
+    }
+
+    public void RecordSpadViolation(float crossingDistance)
+    {
+        spadCount++;
+        Debug.Log($"[SessionRunStats] SPAD detected #{spadCount} at route position {crossingDistance:0.0}");
     }
 
     public void RecordHarshBrake(float severity, float deceleration, float jerk, string context)
