@@ -2,6 +2,13 @@ using UnityEngine;
 
 public class SessionRunStats : MonoBehaviour
 {
+    public enum RunSeverity
+    {
+        Minor,
+        Major,
+        Critical
+    }
+
     public static SessionRunStats Instance { get; private set; }
 
     [Header("Passenger Counters")]
@@ -19,6 +26,11 @@ public class SessionRunStats : MonoBehaviour
     public float peakBrakeSeverity;
     public float peakDeceleration;
     public float peakJerk;
+
+    [Header("Door Safety")]
+    public int tractionWithDoorOpenViolations;
+    public int offPlatformDoorOpenCommandViolations;
+    public RunSeverity doorRunSeverity = RunSeverity.Minor;
 
     private void Awake()
     {
@@ -73,6 +85,9 @@ public class SessionRunStats : MonoBehaviour
 
     public void PrintRunSummary()
     {
+        int totalDoorViolations = tractionWithDoorOpenViolations + offPlatformDoorOpenCommandViolations;
+        doorRunSeverity = EvaluateDoorSeverity(totalDoorViolations);
+
         Debug.Log(
             "[SessionRunStats] Run Summary => " +
             $"pickups: {passengerPickups}, " +
@@ -84,7 +99,12 @@ public class SessionRunStats : MonoBehaviour
             $"emergencyBrakeUsageCount: {emergencyBrakeUsageCount}, " +
             $"peakBrakeSeverity: {peakBrakeSeverity:0.00}, " +
             $"peakDeceleration: {peakDeceleration:0.00}, " +
-            $"peakJerk: {peakJerk:0.00}");
+            $"peakJerk: {peakJerk:0.00}, " +
+            $"tractionWithDoorOpenViolations: {tractionWithDoorOpenViolations}, " +
+            $"offPlatformDoorOpenCommandViolations: {offPlatformDoorOpenCommandViolations}, " +
+            $"doorRunSeverity: {doorRunSeverity.ToString().ToLowerInvariant()}");
+
+        PrintDoorEventExplanations();
     }
 
     public void RecordHarshBrake(float severity, float deceleration, float jerk, string context)
@@ -105,5 +125,47 @@ public class SessionRunStats : MonoBehaviour
         peakJerk = Mathf.Max(peakJerk, Mathf.Abs(jerk));
 
         Debug.Log($"[SessionRunStats] Emergency brake #{emergencyBrakeUsageCount} severity={severity:0.00} decel={deceleration:0.00} jerk={jerk:0.00} at {context}");
+    }
+
+    public void RecordTractionWithDoorOpenViolation(string context)
+    {
+        tractionWithDoorOpenViolations++;
+        Debug.LogWarning($"[Door Safety] Traction applied while door not fully closed/locked. Count={tractionWithDoorOpenViolations}. {context}");
+    }
+
+    public void RecordOffPlatformDoorOpenCommandViolation(string context)
+    {
+        offPlatformDoorOpenCommandViolations++;
+        Debug.LogWarning($"[Door Safety] Door-open command issued while off-platform. Count={offPlatformDoorOpenCommandViolations}. {context}");
+    }
+
+    private RunSeverity EvaluateDoorSeverity(int totalDoorViolations)
+    {
+        if (totalDoorViolations >= 5)
+        {
+            return RunSeverity.Critical;
+        }
+
+        if (totalDoorViolations >= 3)
+        {
+            return RunSeverity.Major;
+        }
+
+        return RunSeverity.Minor;
+    }
+
+    private void PrintDoorEventExplanations()
+    {
+        Debug.Log(
+            "[Door Safety] End-of-run explanation: " +
+            $"Traction-with-door-open events={tractionWithDoorOpenViolations}. " +
+            "This event means traction was commanded while a door was not fully closed/locked.");
+
+        Debug.Log(
+            "[Door Safety] End-of-run explanation: " +
+            $"Off-platform door-open command events={offPlatformDoorOpenCommandViolations}. " +
+            "This event means a door-open command was issued while the train was outside a platform zone.");
+
+        Debug.Log($"[Door Safety] Penalty severity for scoring: {doorRunSeverity.ToString().ToLowerInvariant()}.");
     }
 }

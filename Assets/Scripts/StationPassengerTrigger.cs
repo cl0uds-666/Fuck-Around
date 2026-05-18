@@ -218,6 +218,10 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = true;
+            if (train != null)
+            {
+                train.IsAtPlatform = true;
+            }
             transferStarted = false;
             trainStoppedInsideStation = false;
             validStopCompletedThisStation = false;
@@ -231,6 +235,10 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = false;
+            if (train != null)
+            {
+                train.IsAtPlatform = false;
+            }
 
             if (!validStopCompletedThisStation && SessionRunStats.Instance != null)
             {
