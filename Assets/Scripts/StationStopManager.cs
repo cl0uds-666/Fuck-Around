@@ -52,11 +52,21 @@ public class StationStopManager : MonoBehaviour
         if (insideStopZone && trainStopped)
         {
             resultText.text = "Perfect stop - passengers collected!";
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordAccurateStop();
+            }
+
             stationIndex++;
         }
         else if (distanceToStation < -stopTolerance)
         {
             resultText.text = "Overshot station - passengers missed!";
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordMissedStop();
+            }
+
             stationIndex++;
         }
     }
