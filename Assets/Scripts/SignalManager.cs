@@ -25,6 +25,7 @@ public class SignalManager : MonoBehaviour
     private float activeRedSignalX = -1f;
     private bool hasBeenInActiveRedZone = false;
     private bool stoppedInActiveRedZone = false;
+    private bool lockActiveRedSignal = false;
 
     private readonly Dictionary<float, SignalVisual> redSignalVisuals = new Dictionary<float, SignalVisual>();
 
@@ -63,7 +64,7 @@ public class SignalManager : MonoBehaviour
             return;
         }
 
-        if (activeRedSignalX != redSignalDistance)
+        if (!lockActiveRedSignal && activeRedSignalX != redSignalDistance)
         {
             activeRedSignalX = redSignalDistance;
             redSignalCleared = false;
@@ -78,6 +79,7 @@ public class SignalManager : MonoBehaviour
 
         if (atRedSignal)
         {
+            lockActiveRedSignal = true;
             hasBeenInActiveRedZone = true;
 
             if (trainStopped)
@@ -113,7 +115,8 @@ public class SignalManager : MonoBehaviour
             if (stoppedTimer >= waitTimeBeforeGreen)
             {
                 redSignalCleared = true;
-                SetRedSignalToGreen(redSignalDistance);
+                SetRedSignalToGreen(activeRedSignalX);
+                lockActiveRedSignal = false;
                 message = "Signal cleared - proceed";
             }
         }
@@ -131,6 +134,7 @@ public class SignalManager : MonoBehaviour
                 SessionRunStats.Instance.RecordSpad();
             }
 
+            lockActiveRedSignal = false;
             message = "SPAD! You passed a red signal!";
         }
 
