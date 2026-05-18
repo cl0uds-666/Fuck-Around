@@ -112,6 +112,12 @@ public class SignalManager : MonoBehaviour
         if (!hasFailedSignal && !redSignalCleared && passedRed && train.speed > stoppedSpeed)
         {
             hasFailedSignal = true;
+
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordSpad();
+            }
+
             message = "SPAD! You passed a red signal!";
         }
 

@@ -12,6 +12,7 @@ public class SessionRunStats : MonoBehaviour
     public int missedStops;
     public int accurateStops;
     public int dwellTimeViolations;
+    public int spadCount;
 
     [Header("Braking Analysis")]
     public int harshBrakeCount;
@@ -71,6 +72,12 @@ public class SessionRunStats : MonoBehaviour
         Debug.Log($"[SessionRunStats] Dwell time violations: {dwellTimeViolations}");
     }
 
+    public void RecordSpad()
+    {
+        spadCount++;
+        Debug.Log($"[SessionRunStats] SPAD count: {spadCount}");
+    }
+
     public void PrintRunSummary()
     {
         Debug.Log(
@@ -80,6 +87,7 @@ public class SessionRunStats : MonoBehaviour
             $"accurateStops: {accurateStops}, " +
             $"missedStops: {missedStops}, " +
             $"dwellTimeViolations: {dwellTimeViolations}, " +
+            $"spadCount: {spadCount}, " +
             $"harshBrakeCount: {harshBrakeCount}, " +
             $"emergencyBrakeUsageCount: {emergencyBrakeUsageCount}, " +
             $"peakBrakeSeverity: {peakBrakeSeverity:0.00}, " +
