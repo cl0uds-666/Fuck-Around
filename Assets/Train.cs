@@ -147,6 +147,33 @@ namespace TrainControls
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DoorOpen"",
+                    ""type"": ""Button"",
+                    ""id"": ""2b8fb5df-0ef5-4e36-a278-43f1de9aeb97"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DoorClose"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd9dc63b-13f2-4329-8edf-43f4f8fe8a2f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EmergencyBrakeToggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""de7fcb17-b2f7-4da9-a6d8-610bd749f245"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -215,6 +242,72 @@ namespace TrainControls
                     ""action"": ""BrakeDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1ec31362-2b1c-4f2e-b244-b5078f4f75bc"",
+                    ""path"": ""<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button24"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoorOpen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8f77f1ba-a0f8-4e62-b052-59d8ec6b5058"",
+                    ""path"": ""<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button22"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoorClose"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""70a3f083-a7aa-4375-9d4f-a64eced4dd6d"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoorOpen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a6a3e98-a347-4f40-9488-d8352eaec7e9"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoorClose"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec2ba889-20e3-47ba-b5ce-ce68dc2bfb9b"",
+                    ""path"": ""<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button12"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EmergencyBrakeToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2868a745-a180-4f4a-9f36-461293f07ce9"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EmergencyBrakeToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -229,6 +322,9 @@ namespace TrainControls
             m_TrainAction_ThrottleDown = m_TrainAction.FindAction("ThrottleDown", throwIfNotFound: true);
             m_TrainAction_BrakeUp = m_TrainAction.FindAction("BrakeUp", throwIfNotFound: true);
             m_TrainAction_BrakeDown = m_TrainAction.FindAction("BrakeDown", throwIfNotFound: true);
+            m_TrainAction_DoorOpen = m_TrainAction.FindAction("DoorOpen", throwIfNotFound: true);
+            m_TrainAction_DoorClose = m_TrainAction.FindAction("DoorClose", throwIfNotFound: true);
+            m_TrainAction_EmergencyBrakeToggle = m_TrainAction.FindAction("EmergencyBrakeToggle", throwIfNotFound: true);
         }
 
         ~@Train()
@@ -315,6 +411,9 @@ namespace TrainControls
         private readonly InputAction m_TrainAction_ThrottleDown;
         private readonly InputAction m_TrainAction_BrakeUp;
         private readonly InputAction m_TrainAction_BrakeDown;
+        private readonly InputAction m_TrainAction_DoorOpen;
+        private readonly InputAction m_TrainAction_DoorClose;
+        private readonly InputAction m_TrainAction_EmergencyBrakeToggle;
         /// <summary>
         /// Provides access to input actions defined in input action map "TrainAction".
         /// </summary>
@@ -350,6 +449,18 @@ namespace TrainControls
             /// Provides access to the underlying input action "TrainAction/BrakeDown".
             /// </summary>
             public InputAction @BrakeDown => m_Wrapper.m_TrainAction_BrakeDown;
+            /// <summary>
+            /// Provides access to the underlying input action "TrainAction/DoorOpen".
+            /// </summary>
+            public InputAction @DoorOpen => m_Wrapper.m_TrainAction_DoorOpen;
+            /// <summary>
+            /// Provides access to the underlying input action "TrainAction/DoorClose".
+            /// </summary>
+            public InputAction @DoorClose => m_Wrapper.m_TrainAction_DoorClose;
+            /// <summary>
+            /// Provides access to the underlying input action "TrainAction/EmergencyBrakeToggle".
+            /// </summary>
+            public InputAction @EmergencyBrakeToggle => m_Wrapper.m_TrainAction_EmergencyBrakeToggle;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -394,6 +505,15 @@ namespace TrainControls
                 @BrakeDown.started += instance.OnBrakeDown;
                 @BrakeDown.performed += instance.OnBrakeDown;
                 @BrakeDown.canceled += instance.OnBrakeDown;
+                @DoorOpen.started += instance.OnDoorOpen;
+                @DoorOpen.performed += instance.OnDoorOpen;
+                @DoorOpen.canceled += instance.OnDoorOpen;
+                @DoorClose.started += instance.OnDoorClose;
+                @DoorClose.performed += instance.OnDoorClose;
+                @DoorClose.canceled += instance.OnDoorClose;
+                @EmergencyBrakeToggle.started += instance.OnEmergencyBrakeToggle;
+                @EmergencyBrakeToggle.performed += instance.OnEmergencyBrakeToggle;
+                @EmergencyBrakeToggle.canceled += instance.OnEmergencyBrakeToggle;
             }
 
             /// <summary>
@@ -423,6 +543,15 @@ namespace TrainControls
                 @BrakeDown.started -= instance.OnBrakeDown;
                 @BrakeDown.performed -= instance.OnBrakeDown;
                 @BrakeDown.canceled -= instance.OnBrakeDown;
+                @DoorOpen.started -= instance.OnDoorOpen;
+                @DoorOpen.performed -= instance.OnDoorOpen;
+                @DoorOpen.canceled -= instance.OnDoorOpen;
+                @DoorClose.started -= instance.OnDoorClose;
+                @DoorClose.performed -= instance.OnDoorClose;
+                @DoorClose.canceled -= instance.OnDoorClose;
+                @EmergencyBrakeToggle.started -= instance.OnEmergencyBrakeToggle;
+                @EmergencyBrakeToggle.performed -= instance.OnEmergencyBrakeToggle;
+                @EmergencyBrakeToggle.canceled -= instance.OnEmergencyBrakeToggle;
             }
 
             /// <summary>
@@ -505,6 +634,27 @@ namespace TrainControls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnBrakeDown(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "DoorOpen" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDoorOpen(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "DoorClose" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDoorClose(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "EmergencyBrakeToggle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnEmergencyBrakeToggle(InputAction.CallbackContext context);
         }
     }
 }
