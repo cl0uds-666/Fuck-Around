@@ -65,6 +65,12 @@ public class SignalManager : MonoBehaviour
         bool hasRedAhead = routeData.TryGetNextRedSignal(trainDistance, out float redSignalDistance);
         bool hasYellowAhead = routeData.TryGetNextYellowSignal(trainDistance, out float yellowSignalDistance);
 
+        if (!hasRedAhead && activeRedSignalX >= 0f && !redSignalCleared && !hasFailedSignal)
+        {
+            redSignalDistance = activeRedSignalX;
+            hasRedAhead = true;
+        }
+
         if (!hasRedAhead)
         {
             if (infoText != null)
@@ -72,6 +78,7 @@ public class SignalManager : MonoBehaviour
                 infoText.text = "GREEN - End of route";
             }
 
+            previousFrontPosition = trainDistance;
             return;
         }
 
