@@ -13,6 +13,13 @@ public class SessionRunStats : MonoBehaviour
     public int accurateStops;
     public int dwellTimeViolations;
 
+    [Header("Braking Analysis")]
+    public int harshBrakeCount;
+    public int emergencyBrakeUsageCount;
+    public float peakBrakeSeverity;
+    public float peakDeceleration;
+    public float peakJerk;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -72,6 +79,31 @@ public class SessionRunStats : MonoBehaviour
             $"dropOffs: {passengerDropOffs}, " +
             $"accurateStops: {accurateStops}, " +
             $"missedStops: {missedStops}, " +
-            $"dwellTimeViolations: {dwellTimeViolations}");
+            $"dwellTimeViolations: {dwellTimeViolations}, " +
+            $"harshBrakeCount: {harshBrakeCount}, " +
+            $"emergencyBrakeUsageCount: {emergencyBrakeUsageCount}, " +
+            $"peakBrakeSeverity: {peakBrakeSeverity:0.00}, " +
+            $"peakDeceleration: {peakDeceleration:0.00}, " +
+            $"peakJerk: {peakJerk:0.00}");
+    }
+
+    public void RecordHarshBrake(float severity, float deceleration, float jerk, string context)
+    {
+        harshBrakeCount++;
+        peakBrakeSeverity = Mathf.Max(peakBrakeSeverity, severity);
+        peakDeceleration = Mathf.Max(peakDeceleration, deceleration);
+        peakJerk = Mathf.Max(peakJerk, Mathf.Abs(jerk));
+
+        Debug.Log($"[SessionRunStats] Harsh brake #{harshBrakeCount} severity={severity:0.00} decel={deceleration:0.00} jerk={jerk:0.00} at {context}");
+    }
+
+    public void RecordEmergencyBrakeUsage(float severity, float deceleration, float jerk, string context)
+    {
+        emergencyBrakeUsageCount++;
+        peakBrakeSeverity = Mathf.Max(peakBrakeSeverity, severity);
+        peakDeceleration = Mathf.Max(peakDeceleration, deceleration);
+        peakJerk = Mathf.Max(peakJerk, Mathf.Abs(jerk));
+
+        Debug.Log($"[SessionRunStats] Emergency brake #{emergencyBrakeUsageCount} severity={severity:0.00} decel={deceleration:0.00} jerk={jerk:0.00} at {context}");
     }
 }

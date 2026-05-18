@@ -37,6 +37,15 @@ public class TrainController : MonoBehaviour
     public float brake = 0f;
     public float brakeChangeSpeed = 0.7f;
     public float brakePower = 4f;
+    public float emergencyBrakeExtraPower = 1.5f;
+
+    [Header("Brake Event Thresholds")]
+    public float harshBrakeDecelerationThreshold = 3.5f;
+    public float emergencyBrakeDecelerationThreshold = 6f;
+    public float harshBrakeSeverityThreshold = 0.7f;
+    public float emergencyBrakeSeverityThreshold = 1.2f;
+    public float harshBrakeJerkThreshold = 8f;
+    public float emergencyBrakeJerkThreshold = 14f;
 
     [Header("Coasting / Resistance")]
     public float baseCoastDeceleration = 0.15f;
@@ -85,6 +94,10 @@ public class TrainController : MonoBehaviour
     public float ambienceVolume = 0.4f;
 
     private float previousBrake;
+    private float previousDeceleration;
+    private bool harshBrakeActive;
+    private bool emergencyBrakeActive;
+    private bool emergencyBrakeTriggered;
 
 
     private void Awake()
@@ -141,6 +154,7 @@ public class TrainController : MonoBehaviour
 
         UpdateEngineAudio();
         UpdateBrakeAudio();
+        AnalyzeBrakeEvents();
 
         UpdateAmbience();
     }
@@ -201,6 +215,8 @@ public class TrainController : MonoBehaviour
             return;
         }
 
+        emergencyBrakeTriggered = Keyboard.current.eKey.wasPressedThisFrame;
+
         if (Keyboard.current.dKey.wasPressedThisFrame)
         {
             doorOpenRequested = !doorOpenRequested;
@@ -260,6 +276,13 @@ public class TrainController : MonoBehaviour
         float acceleration = throttle * accelerationPower;
         float braking = brake * brakePower;
 
+        if (emergencyBrakeTriggered)
+        {
+            throttle = 0f;
+            brake = 1f;
+            braking += emergencyBrakeExtraPower;
+        }
+
         speed += acceleration * Time.deltaTime;
         speed -= braking * Time.deltaTime;
 
@@ -279,6 +302,60 @@ public class TrainController : MonoBehaviour
             transform.position.y,
             transform.position.z
         );
+
+        emergencyBrakeTriggered = false;
+    }
+
+    private void AnalyzeBrakeEvents()
+    {
+        float dt = Mathf.Max(Time.deltaTime, 0.0001f);
+        float deceleration = Mathf.Max(0f, (previousSpeed - speed) / dt);
+        float jerk = (deceleration - previousDeceleration) / dt;
+        float jerkMagnitude = Mathf.Abs(jerk);
+        float severity = ComputeBrakeSeverity(deceleration, jerkMagnitude);
+
+        bool harshNow = deceleration >= harshBrakeDecelerationThreshold || jerkMagnitude >= harshBrakeJerkThreshold || severity >= harshBrakeSeverityThreshold;
+        bool emergencyNow = deceleration >= emergencyBrakeDecelerationThreshold || jerkMagnitude >= emergencyBrakeJerkThreshold || severity >= emergencyBrakeSeverityThreshold;
+
+        string context = BuildBrakeContext();
+
+        if (harshNow && !harshBrakeActive && SessionRunStats.Instance != null)
+        {
+            SessionRunStats.Instance.RecordHarshBrake(severity, deceleration, jerk, context);
+        }
+
+        if ((emergencyNow || brake >= 0.999f) && !emergencyBrakeActive && SessionRunStats.Instance != null)
+        {
+            SessionRunStats.Instance.RecordEmergencyBrakeUsage(severity, deceleration, jerk, context);
+        }
+
+        harshBrakeActive = harshNow;
+        emergencyBrakeActive = emergencyNow || brake >= 0.999f;
+        previousDeceleration = deceleration;
+    }
+
+    private float ComputeBrakeSeverity(float deceleration, float jerkMagnitude)
+    {
+        float decelScore = Mathf.InverseLerp(harshBrakeDecelerationThreshold, emergencyBrakeDecelerationThreshold, deceleration);
+        float jerkScore = Mathf.InverseLerp(harshBrakeJerkThreshold, emergencyBrakeJerkThreshold, jerkMagnitude);
+        return Mathf.Max(decelScore, jerkScore);
+    }
+
+    private string BuildBrakeContext()
+    {
+        string stationContext = "between stations";
+        Collider[] hits = Physics.OverlapSphere(transform.position, 40f);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            StationPassengerTrigger station = hits[i].GetComponentInParent<StationPassengerTrigger>();
+            if (station != null)
+            {
+                stationContext = station.gameObject.name;
+                break;
+            }
+        }
+
+        return $"t={Time.timeSinceLevelLoad:0.00}s route={distanceAlongRoute:0.0}m station={stationContext}";
     }
 
     void UpdateEngineAudio()
