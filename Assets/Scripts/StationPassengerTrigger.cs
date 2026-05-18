@@ -28,9 +28,14 @@ public class StationPassengerTrigger : MonoBehaviour
 
     [Header("Stop Check")]
     public float stoppedSpeed = 0.5f;
+    public float dwellDoorOpenGraceSeconds = 3f;
 
     private bool trainInsideStation = false;
     private bool transferStarted = false;
+    private bool trainStoppedInsideStation = false;
+    private bool dwellViolationRecordedForThisStop = false;
+    private bool validStopCompletedThisStation = false;
+    private float dwellDoorClosedTimer = 0f;
 
     private void Awake()
     {
@@ -47,6 +52,33 @@ public class StationPassengerTrigger : MonoBehaviour
 
     private void Update()
     {
+        if (trainInsideStation && train != null)
+        {
+            bool trainStopped = train.speed <= stoppedSpeed;
+
+            if (trainStopped)
+            {
+                trainStoppedInsideStation = true;
+
+                if (!train.IsDoorOpen && !dwellViolationRecordedForThisStop)
+                {
+                    dwellDoorClosedTimer += Time.deltaTime;
+                    if (dwellDoorClosedTimer >= dwellDoorOpenGraceSeconds)
+                    {
+                        dwellViolationRecordedForThisStop = true;
+                        if (SessionRunStats.Instance != null)
+                        {
+                            SessionRunStats.Instance.RecordDwellTimeViolation();
+                        }
+                    }
+                }
+                else if (train.IsDoorOpen)
+                {
+                    dwellDoorClosedTimer = 0f;
+                }
+            }
+        }
+
         if (transferStarted)
         {
             return;
@@ -55,6 +87,11 @@ public class StationPassengerTrigger : MonoBehaviour
         if (CanTransferPassengersNow())
         {
             transferStarted = true;
+            validStopCompletedThisStation = true;
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordAccurateStop();
+            }
             StartCoroutine(HandlePassengerTransfer());
         }
     }
@@ -78,6 +115,10 @@ public class StationPassengerTrigger : MonoBehaviour
             {
                 int randomExitRequest = Random.Range(1, maxExitingAttempt + 1);
                 exitCount = passengerManager.RemovePassengers(randomExitRequest);
+                if (SessionRunStats.Instance != null)
+                {
+                    SessionRunStats.Instance.RecordPassengerDropOff(exitCount);
+                }
             }
             yield return StartCoroutine(SpawnExitingPassengers(exitCount));
 
@@ -164,7 +205,11 @@ public class StationPassengerTrigger : MonoBehaviour
 
         if (flow == PassengerWalker.PassengerFlow.Boarding)
         {
-            passengerManager.AddPassengers(1);
+            int boarded = passengerManager.AddPassengers(1);
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordPassengerPickup(boarded);
+            }
         }
     }
 
@@ -173,6 +218,11 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = true;
+            transferStarted = false;
+            trainStoppedInsideStation = false;
+            validStopCompletedThisStation = false;
+            dwellViolationRecordedForThisStop = false;
+            dwellDoorClosedTimer = 0f;
         }
     }
 
@@ -181,6 +231,16 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = false;
+
+            if (!validStopCompletedThisStation && SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordMissedStop();
+            }
+
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.PrintRunSummary();
+            }
         }
     }
 }
