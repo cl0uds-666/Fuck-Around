@@ -99,6 +99,9 @@ public class TrainController : MonoBehaviour
     private bool emergencyBrakeActive;
     private bool emergencyBrakeTriggered;
     private bool emergencyBrakeLatched;
+    private bool doorTractionViolationLatched;
+
+    public bool IsAtPlatform { get; set; }
 
 
     private void Awake()
@@ -158,6 +161,7 @@ public class TrainController : MonoBehaviour
         AnalyzeBrakeEvents();
 
         UpdateAmbience();
+        AnalyzeDoorSafetyEvents();
     }
 
     private void HandleInput()
@@ -231,6 +235,11 @@ public class TrainController : MonoBehaviour
 
         if (Keyboard.current.dKey.wasPressedThisFrame)
         {
+            if (!IsAtPlatform && SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordOffPlatformDoorOpenCommandViolation(BuildDoorContext());
+            }
+
             doorOpenRequested = !doorOpenRequested;
         }
     }
@@ -281,6 +290,30 @@ public class TrainController : MonoBehaviour
         }
 
         return value;
+    }
+
+    private void AnalyzeDoorSafetyEvents()
+    {
+        bool tractionApplied = throttle > 0.05f && speed > 0.05f;
+        bool doorNotFullyClosedOrLocked = currentDoorWidth > doorClosedWidth + 0.01f;
+
+        if (tractionApplied && doorNotFullyClosedOrLocked)
+        {
+            if (!doorTractionViolationLatched && SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordTractionWithDoorOpenViolation(BuildDoorContext());
+            }
+
+            doorTractionViolationLatched = true;
+            return;
+        }
+
+        doorTractionViolationLatched = false;
+    }
+
+    private string BuildDoorContext()
+    {
+        return $"t={Time.timeSinceLevelLoad:0.00}s route={distanceAlongRoute:0.0}m speed={speed:0.00}m/s throttle={throttle:0.00} doorWidth={currentDoorWidth:0.00} atPlatform={IsAtPlatform}";
     }
 
     private void ApplyMovement()
