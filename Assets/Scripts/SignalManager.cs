@@ -24,6 +24,7 @@ public class SignalManager : MonoBehaviour
     private float stoppedTimer = 0f;
     private float activeRedSignalX = -1f;
     private float previousFrontPosition = float.MinValue;
+    private bool trainStoppedInsideRedZone = false;
 
     private enum ActiveSignalState
     {
@@ -46,7 +47,37 @@ public class SignalManager : MonoBehaviour
 
     public void SetTrainInRedZone(bool inside)
     {
+        if (inside)
+        {
+            trainStoppedInsideRedZone = false;
+        }
+
         trainInRedZone = inside;
+    }
+
+    public void EvaluateRedZoneExit()
+    {
+        if (hasFailedSignal || redSignalCleared)
+        {
+            return;
+        }
+
+        if (trainStoppedInsideRedZone)
+        {
+            return;
+        }
+
+        hasFailedSignal = true;
+
+        if (SessionRunStats.Instance != null)
+        {
+            SessionRunStats.Instance.RecordSpadViolation(train != null ? train.distanceAlongRoute : activeRedSignalX);
+        }
+
+        if (infoText != null)
+        {
+            infoText.text = "SPAD! You passed a red signal!";
+        }
     }
 
     private void Update()
@@ -93,6 +124,11 @@ public class SignalManager : MonoBehaviour
         bool atRedSignal = trainInRedZone;
         bool trainStopped = train.speed <= stoppedSpeed;
         bool passedRed = trainDistance > redSignalDistance + redStopTolerance;
+
+        if (atRedSignal && trainStopped)
+        {
+            trainStoppedInsideRedZone = true;
+        }
 
         string message;
 

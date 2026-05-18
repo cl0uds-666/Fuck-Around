@@ -26,6 +26,7 @@ public class SignalStopTrigger : MonoBehaviour
         if (train != null && signalManager != null)
         {
             signalManager.SetTrainInRedZone(false);
+            signalManager.EvaluateRedZoneExit();
         }
     }
 }
