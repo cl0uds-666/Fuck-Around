@@ -55,6 +55,20 @@ public class SignalManager : MonoBehaviour
         trainInRedZone = inside;
     }
 
+    public void EnterRedZone(float redSignalX)
+    {
+        trainInRedZone = true;
+        trainStoppedInsideRedZone = false;
+
+        if (activeRedSignalX != redSignalX)
+        {
+            activeRedSignalX = redSignalX;
+            redSignalCleared = false;
+            hasFailedSignal = false;
+            stoppedTimer = 0f;
+        }
+    }
+
     public void EvaluateRedZoneExit()
     {
         if (hasFailedSignal || redSignalCleared)
@@ -96,7 +110,7 @@ public class SignalManager : MonoBehaviour
         bool hasRedAhead = routeData.TryGetNextRedSignal(trainDistance, out float redSignalDistance);
         bool hasYellowAhead = routeData.TryGetNextYellowSignal(trainDistance, out float yellowSignalDistance);
 
-        if (!hasRedAhead && activeRedSignalX >= 0f && !redSignalCleared && !hasFailedSignal)
+        if ((!hasRedAhead || trainInRedZone) && activeRedSignalX >= 0f && !redSignalCleared && !hasFailedSignal)
         {
             redSignalDistance = activeRedSignalX;
             hasRedAhead = true;

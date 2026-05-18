@@ -13,7 +13,7 @@ public class SignalStopTrigger : MonoBehaviour
 
         if (train != null && signalManager != null)
         {
-            signalManager.SetTrainInRedZone(true);
+            signalManager.EnterRedZone(transform.position.x);
         }
     }
 
