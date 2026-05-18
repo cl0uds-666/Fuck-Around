@@ -88,6 +88,10 @@ public class StationPassengerTrigger : MonoBehaviour
         {
             transferStarted = true;
             validStopCompletedThisStation = true;
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordAccurateStop();
+            }
             StartCoroutine(HandlePassengerTransfer());
         }
     }
@@ -228,7 +232,7 @@ public class StationPassengerTrigger : MonoBehaviour
         {
             trainInsideStation = false;
 
-            if (trainStoppedInsideStation && !validStopCompletedThisStation && SessionRunStats.Instance != null)
+            if (!validStopCompletedThisStation && SessionRunStats.Instance != null)
             {
                 SessionRunStats.Instance.RecordMissedStop();
             }
