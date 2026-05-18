@@ -60,9 +60,11 @@ public class SignalManager : MonoBehaviour
         trainInRedZone = true;
         trainStoppedInsideRedZone = false;
 
-        if (activeRedSignalX != redSignalX)
+        float resolvedRedSignalX = ResolveNearestRedSignalX(redSignalX);
+
+        if (activeRedSignalX != resolvedRedSignalX)
         {
-            activeRedSignalX = redSignalX;
+            activeRedSignalX = resolvedRedSignalX;
             redSignalCleared = false;
             hasFailedSignal = false;
             stoppedTimer = 0f;
@@ -220,6 +222,54 @@ public class SignalManager : MonoBehaviour
         if (redSignalVisuals.TryGetValue(redSignalDistance, out SignalVisual redVisual) && redVisual != null)
         {
             redVisual.SetSignal(greenMat, greenHex);
+            return;
         }
+
+        float nearestDistance = float.MaxValue;
+        SignalVisual nearestVisual = null;
+
+        foreach (KeyValuePair<float, SignalVisual> pair in redSignalVisuals)
+        {
+            if (pair.Value == null)
+            {
+                continue;
+            }
+
+            float distance = Mathf.Abs(pair.Key - redSignalDistance);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearestVisual = pair.Value;
+            }
+        }
+
+        if (nearestVisual != null)
+        {
+            nearestVisual.SetSignal(greenMat, greenHex);
+        }
+    }
+
+    private float ResolveNearestRedSignalX(float candidateX)
+    {
+        if (routeData == null || routeData.redSignalPositions == null || routeData.redSignalPositions.Count == 0)
+        {
+            return candidateX;
+        }
+
+        float nearest = routeData.redSignalPositions[0];
+        float nearestDistance = Mathf.Abs(nearest - candidateX);
+
+        for (int i = 1; i < routeData.redSignalPositions.Count; i++)
+        {
+            float redX = routeData.redSignalPositions[i];
+            float distance = Mathf.Abs(redX - candidateX);
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                nearest = redX;
+            }
+        }
+
+        return nearest;
     }
 }
