@@ -31,6 +31,7 @@ public class StationPassengerTrigger : MonoBehaviour
 
     private bool trainInsideStation = false;
     private bool transferStarted = false;
+    private bool dwellViolationRecordedForThisStop = false;
 
     private void Awake()
     {
@@ -47,6 +48,20 @@ public class StationPassengerTrigger : MonoBehaviour
 
     private void Update()
     {
+        if (trainInsideStation
+            && !transferStarted
+            && !dwellViolationRecordedForThisStop
+            && train != null
+            && train.speed <= stoppedSpeed
+            && !train.IsDoorOpen)
+        {
+            dwellViolationRecordedForThisStop = true;
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordDwellTimeViolation();
+            }
+        }
+
         if (transferStarted)
         {
             return;
@@ -78,6 +93,10 @@ public class StationPassengerTrigger : MonoBehaviour
             {
                 int randomExitRequest = Random.Range(1, maxExitingAttempt + 1);
                 exitCount = passengerManager.RemovePassengers(randomExitRequest);
+                if (SessionRunStats.Instance != null)
+                {
+                    SessionRunStats.Instance.RecordPassengerDropOff(exitCount);
+                }
             }
             yield return StartCoroutine(SpawnExitingPassengers(exitCount));
 
@@ -164,7 +183,11 @@ public class StationPassengerTrigger : MonoBehaviour
 
         if (flow == PassengerWalker.PassengerFlow.Boarding)
         {
-            passengerManager.AddPassengers(1);
+            int boarded = passengerManager.AddPassengers(1);
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordPassengerPickup(boarded);
+            }
         }
     }
 
@@ -173,6 +196,7 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = true;
+            dwellViolationRecordedForThisStop = false;
         }
     }
 
@@ -181,6 +205,10 @@ public class StationPassengerTrigger : MonoBehaviour
         if (other.GetComponentInParent<TrainController>() != null)
         {
             trainInsideStation = false;
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.PrintRunSummary();
+            }
         }
     }
 }
