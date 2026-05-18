@@ -23,8 +23,10 @@ public class SignalManager : MonoBehaviour
     private bool redSignalCleared = false;
     private float stoppedTimer = 0f;
     private float activeRedSignalX = -1f;
+    private float enteredRedSignalX = -1f;
     private float previousFrontPosition = float.MinValue;
     private bool trainStoppedInsideRedZone = false;
+    private bool spadRecordedForActiveSignal = false;
 
     private enum ActiveSignalState
     {
@@ -68,12 +70,15 @@ public class SignalManager : MonoBehaviour
             redSignalCleared = false;
             hasFailedSignal = false;
             stoppedTimer = 0f;
+            spadRecordedForActiveSignal = false;
         }
+
+        enteredRedSignalX = resolvedRedSignalX;
     }
 
     public void EvaluateRedZoneExit()
     {
-        if (hasFailedSignal || redSignalCleared)
+        if (hasFailedSignal || redSignalCleared || spadRecordedForActiveSignal)
         {
             return;
         }
@@ -85,7 +90,8 @@ public class SignalManager : MonoBehaviour
 
         hasFailedSignal = true;
         redSignalCleared = true;
-        SetRedSignalToGreen(activeRedSignalX);
+        spadRecordedForActiveSignal = true;
+        SetRedSignalToGreen(enteredRedSignalX);
 
         if (SessionRunStats.Instance != null)
         {
@@ -137,6 +143,7 @@ public class SignalManager : MonoBehaviour
             redSignalCleared = false;
             hasFailedSignal = false;
             stoppedTimer = 0f;
+            spadRecordedForActiveSignal = false;
         }
 
         bool atRedSignal = trainInRedZone;
@@ -190,10 +197,11 @@ public class SignalManager : MonoBehaviour
 
         bool crossedActiveRed = previousFrontPosition <= redSignalDistance && trainDistance > redSignalDistance;
 
-        if (!hasFailedSignal && !redSignalCleared && crossedActiveRed && activeSignalState == ActiveSignalState.Danger)
+        if (!hasFailedSignal && !redSignalCleared && !spadRecordedForActiveSignal && crossedActiveRed && activeSignalState == ActiveSignalState.Danger)
         {
             hasFailedSignal = true;
             redSignalCleared = true;
+            spadRecordedForActiveSignal = true;
             SetRedSignalToGreen(redSignalDistance);
             message = "SPAD! You passed a red signal!";
 
@@ -202,10 +210,11 @@ public class SignalManager : MonoBehaviour
                 SessionRunStats.Instance.RecordSpadViolation(trainDistance);
             }
         }
-        else if (!hasFailedSignal && !redSignalCleared && passedRed && train.speed > stoppedSpeed)
+        else if (!hasFailedSignal && !redSignalCleared && !spadRecordedForActiveSignal && passedRed && train.speed > stoppedSpeed)
         {
             hasFailedSignal = true;
             redSignalCleared = true;
+            spadRecordedForActiveSignal = true;
             SetRedSignalToGreen(redSignalDistance);
             message = "SPAD! You passed a red signal!";
 
