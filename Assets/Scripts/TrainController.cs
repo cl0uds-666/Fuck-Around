@@ -98,6 +98,7 @@ public class TrainController : MonoBehaviour
     private bool harshBrakeActive;
     private bool emergencyBrakeActive;
     private bool emergencyBrakeTriggered;
+    private bool emergencyBrakeLatched;
 
 
     private void Awake()
@@ -161,6 +162,13 @@ public class TrainController : MonoBehaviour
 
     private void HandleInput()
     {
+        if (emergencyBrakeLatched)
+        {
+            throttle = 0f;
+            brake = 1f;
+            return;
+        }
+
         // Controller levers
         float rawThrottle = throttleAction.ReadValue<float>();
         float rawBrake = brakeAction.ReadValue<float>();
@@ -215,7 +223,11 @@ public class TrainController : MonoBehaviour
             return;
         }
 
-        emergencyBrakeTriggered = Keyboard.current.eKey.wasPressedThisFrame;
+        if (Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            emergencyBrakeLatched = !emergencyBrakeLatched;
+            emergencyBrakeTriggered = emergencyBrakeLatched;
+        }
 
         if (Keyboard.current.dKey.wasPressedThisFrame)
         {
@@ -276,7 +288,7 @@ public class TrainController : MonoBehaviour
         float acceleration = throttle * accelerationPower;
         float braking = brake * brakePower;
 
-        if (emergencyBrakeTriggered)
+        if (emergencyBrakeLatched || emergencyBrakeTriggered)
         {
             throttle = 0f;
             brake = 1f;
@@ -303,7 +315,6 @@ public class TrainController : MonoBehaviour
             transform.position.z
         );
 
-        emergencyBrakeTriggered = false;
     }
 
     private void AnalyzeBrakeEvents()
