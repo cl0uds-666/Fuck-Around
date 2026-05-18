@@ -13,6 +13,7 @@ public class TrainController : MonoBehaviour
     private InputAction throttleDownAction;
     private InputAction brakeUpAction;
     private InputAction brakeDownAction;
+    private InputAction emergencyBrakeToggleAction;
     private InputAction doorOpenAction;
     private InputAction doorCloseAction;
 
@@ -128,6 +129,7 @@ public class TrainController : MonoBehaviour
         throttleDownAction = trainMap.FindAction("ThrottleDown");
         brakeUpAction = trainMap.FindAction("BrakeUp");
         brakeDownAction = trainMap.FindAction("BrakeDown");
+        emergencyBrakeToggleAction = trainMap.FindAction("EmergencyBrakeToggle");
         doorOpenAction = trainMap.FindAction("DoorOpen");
         doorCloseAction = trainMap.FindAction("DoorClose");
 
@@ -137,6 +139,7 @@ public class TrainController : MonoBehaviour
         if (throttleDownAction == null) Debug.LogError("Missing action: ThrottleDown");
         if (brakeUpAction == null) Debug.LogError("Missing action: BrakeUp");
         if (brakeDownAction == null) Debug.LogError("Missing action: BrakeDown");
+        if (emergencyBrakeToggleAction == null) Debug.LogError("Missing action: EmergencyBrakeToggle");
         if (doorOpenAction == null) Debug.LogError("Missing action: DoorOpen");
         if (doorCloseAction == null) Debug.LogError("Missing action: DoorClose");
     }
@@ -233,7 +236,10 @@ public class TrainController : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        bool emergencyBrakePressed = (emergencyBrakeToggleAction != null && emergencyBrakeToggleAction.WasPressedThisFrame()) ||
+                                     Keyboard.current.eKey.wasPressedThisFrame;
+
+        if (emergencyBrakePressed)
         {
             emergencyBrakeLatched = !emergencyBrakeLatched;
             emergencyBrakeTriggered = emergencyBrakeLatched;

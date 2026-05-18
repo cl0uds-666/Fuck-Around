@@ -77,6 +77,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EmergencyBrakeToggle",
+                    "type": "Button",
+                    "id": "de7fcb17-b2f7-4da9-a6d8-610bd749f245",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -149,7 +158,7 @@
                 {
                     "name": "",
                     "id": "1ec31362-2b1c-4f2e-b244-b5078f4f75bc",
-                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button22",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button24",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -160,7 +169,7 @@
                 {
                     "name": "",
                     "id": "8f77f1ba-a0f8-4e62-b052-59d8ec6b5058",
-                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button24",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button22",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -187,6 +196,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "DoorClose",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec2ba889-20e3-47ba-b5ce-ce68dc2bfb9b",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button12",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EmergencyBrakeToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2868a745-a180-4f4a-9f36-461293f07ce9",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EmergencyBrakeToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
