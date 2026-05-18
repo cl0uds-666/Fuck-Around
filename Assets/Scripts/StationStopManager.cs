@@ -25,6 +25,10 @@ public class StationStopManager : MonoBehaviour
         while (stationIndex < routeData.stationPositions.Count &&
                train.distanceAlongRoute > routeData.stationPositions[stationIndex] + stopTolerance)
         {
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordMissedStop();
+            }
             stationIndex++;
         }
 
