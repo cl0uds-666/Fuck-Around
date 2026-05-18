@@ -13,6 +13,9 @@ public class TrainController : MonoBehaviour
     private InputAction throttleDownAction;
     private InputAction brakeUpAction;
     private InputAction brakeDownAction;
+    private InputAction emergencyBrakeToggleAction;
+    private InputAction doorOpenAction;
+    private InputAction doorCloseAction;
 
     [Header("Controller Calibration")]
     public float inputDeadzone = 0.08f;
@@ -126,6 +129,9 @@ public class TrainController : MonoBehaviour
         throttleDownAction = trainMap.FindAction("ThrottleDown");
         brakeUpAction = trainMap.FindAction("BrakeUp");
         brakeDownAction = trainMap.FindAction("BrakeDown");
+        emergencyBrakeToggleAction = trainMap.FindAction("EmergencyBrakeToggle");
+        doorOpenAction = trainMap.FindAction("DoorOpen");
+        doorCloseAction = trainMap.FindAction("DoorClose");
 
         if (throttleAction == null) Debug.LogError("Missing action: Throttle");
         if (brakeAction == null) Debug.LogError("Missing action: Brake");
@@ -133,6 +139,9 @@ public class TrainController : MonoBehaviour
         if (throttleDownAction == null) Debug.LogError("Missing action: ThrottleDown");
         if (brakeUpAction == null) Debug.LogError("Missing action: BrakeUp");
         if (brakeDownAction == null) Debug.LogError("Missing action: BrakeDown");
+        if (emergencyBrakeToggleAction == null) Debug.LogError("Missing action: EmergencyBrakeToggle");
+        if (doorOpenAction == null) Debug.LogError("Missing action: DoorOpen");
+        if (doorCloseAction == null) Debug.LogError("Missing action: DoorClose");
     }
 
     private void OnEnable()
@@ -227,10 +236,31 @@ public class TrainController : MonoBehaviour
             return;
         }
 
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        bool emergencyBrakePressed = (emergencyBrakeToggleAction != null && emergencyBrakeToggleAction.WasPressedThisFrame()) ||
+                                     Keyboard.current.eKey.wasPressedThisFrame;
+
+        if (emergencyBrakePressed)
         {
             emergencyBrakeLatched = !emergencyBrakeLatched;
             emergencyBrakeTriggered = emergencyBrakeLatched;
+        }
+
+        bool openPressed = doorOpenAction != null && doorOpenAction.WasPressedThisFrame();
+        bool closePressed = doorCloseAction != null && doorCloseAction.WasPressedThisFrame();
+
+        if (openPressed && !closePressed)
+        {
+            if (!IsAtPlatform && SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordOffPlatformDoorOpenCommandViolation(BuildDoorContext());
+            }
+
+            doorOpenRequested = true;
+        }
+
+        if (closePressed && !openPressed)
+        {
+            doorOpenRequested = false;
         }
 
         if (Keyboard.current.dKey.wasPressedThisFrame)

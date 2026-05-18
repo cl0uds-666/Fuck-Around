@@ -59,6 +59,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DoorOpen",
+                    "type": "Button",
+                    "id": "2b8fb5df-0ef5-4e36-a278-43f1de9aeb97",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DoorClose",
+                    "type": "Button",
+                    "id": "fd9dc63b-13f2-4329-8edf-43f4f8fe8a2f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EmergencyBrakeToggle",
+                    "type": "Button",
+                    "id": "de7fcb17-b2f7-4da9-a6d8-610bd749f245",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -125,6 +152,72 @@
                     "processors": "",
                     "groups": "",
                     "action": "BrakeDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1ec31362-2b1c-4f2e-b244-b5078f4f75bc",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button24",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoorOpen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f77f1ba-a0f8-4e62-b052-59d8ec6b5058",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button22",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoorClose",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70a3f083-a7aa-4375-9d4f-a64eced4dd6d",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoorOpen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0a6a3e98-a347-4f40-9488-d8352eaec7e9",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DoorClose",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ec2ba889-20e3-47ba-b5ce-ce68dc2bfb9b",
+                    "path": "<HID::VKB-Sim (C) Alex Oz 2023  VKBSim NXT SEM THQ >/button12",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EmergencyBrakeToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2868a745-a180-4f4a-9f36-461293f07ce9",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EmergencyBrakeToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
