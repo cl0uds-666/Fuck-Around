@@ -23,6 +23,8 @@ public class SignalManager : MonoBehaviour
     private bool redSignalCleared = false;
     private float stoppedTimer = 0f;
     private float activeRedSignalX = -1f;
+    private bool hasBeenInActiveRedZone = false;
+    private bool stoppedInActiveRedZone = false;
 
     private readonly Dictionary<float, SignalVisual> redSignalVisuals = new Dictionary<float, SignalVisual>();
 
@@ -67,11 +69,22 @@ public class SignalManager : MonoBehaviour
             redSignalCleared = false;
             hasFailedSignal = false;
             stoppedTimer = 0f;
+            hasBeenInActiveRedZone = false;
+            stoppedInActiveRedZone = false;
         }
 
         bool atRedSignal = trainInRedZone;
         bool trainStopped = train.speed <= stoppedSpeed;
-        bool passedRed = trainDistance > redSignalDistance + redStopTolerance;
+
+        if (atRedSignal)
+        {
+            hasBeenInActiveRedZone = true;
+
+            if (trainStopped)
+            {
+                stoppedInActiveRedZone = true;
+            }
+        }
 
         string message;
 
@@ -109,7 +122,7 @@ public class SignalManager : MonoBehaviour
             stoppedTimer = 0f;
         }
 
-        if (!hasFailedSignal && !redSignalCleared && passedRed && train.speed > stoppedSpeed)
+        if (!hasFailedSignal && !redSignalCleared && hasBeenInActiveRedZone && !atRedSignal && !stoppedInActiveRedZone)
         {
             hasFailedSignal = true;
 
