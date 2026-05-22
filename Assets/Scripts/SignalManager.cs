@@ -23,6 +23,9 @@ public class SignalManager : MonoBehaviour
     private bool redSignalCleared = false;
     private float stoppedTimer = 0f;
     private float activeRedSignalX = -1f;
+    private bool hasBeenInActiveRedZone = false;
+    private bool stoppedInActiveRedZone = false;
+    private bool lockActiveRedSignal = false;
 
     private readonly Dictionary<float, SignalVisual> redSignalVisuals = new Dictionary<float, SignalVisual>();
 
@@ -61,17 +64,29 @@ public class SignalManager : MonoBehaviour
             return;
         }
 
-        if (activeRedSignalX != redSignalDistance)
+        if (!lockActiveRedSignal && activeRedSignalX != redSignalDistance)
         {
             activeRedSignalX = redSignalDistance;
             redSignalCleared = false;
             hasFailedSignal = false;
             stoppedTimer = 0f;
+            hasBeenInActiveRedZone = false;
+            stoppedInActiveRedZone = false;
         }
 
         bool atRedSignal = trainInRedZone;
         bool trainStopped = train.speed <= stoppedSpeed;
-        bool passedRed = trainDistance > redSignalDistance + redStopTolerance;
+
+        if (atRedSignal)
+        {
+            lockActiveRedSignal = true;
+            hasBeenInActiveRedZone = true;
+
+            if (trainStopped)
+            {
+                stoppedInActiveRedZone = true;
+            }
+        }
 
         string message;
 
@@ -100,7 +115,8 @@ public class SignalManager : MonoBehaviour
             if (stoppedTimer >= waitTimeBeforeGreen)
             {
                 redSignalCleared = true;
-                SetRedSignalToGreen(redSignalDistance);
+                SetRedSignalToGreen(activeRedSignalX);
+                lockActiveRedSignal = false;
                 message = "Signal cleared - proceed";
             }
         }
@@ -109,9 +125,16 @@ public class SignalManager : MonoBehaviour
             stoppedTimer = 0f;
         }
 
-        if (!hasFailedSignal && !redSignalCleared && passedRed && train.speed > stoppedSpeed)
+        if (!hasFailedSignal && !redSignalCleared && hasBeenInActiveRedZone && !atRedSignal && !stoppedInActiveRedZone)
         {
             hasFailedSignal = true;
+
+            if (SessionRunStats.Instance != null)
+            {
+                SessionRunStats.Instance.RecordSpad();
+            }
+
+            lockActiveRedSignal = false;
             message = "SPAD! You passed a red signal!";
         }
 
