@@ -390,6 +390,7 @@ public class TrainController : MonoBehaviour
 
         bool harshNow = deceleration >= harshBrakeDecelerationThreshold || jerkMagnitude >= harshBrakeJerkThreshold || severity >= harshBrakeSeverityThreshold;
         bool emergencyNow = deceleration >= emergencyBrakeDecelerationThreshold || jerkMagnitude >= emergencyBrakeJerkThreshold || severity >= emergencyBrakeSeverityThreshold;
+        bool emergencyBrakeCommanded = emergencyBrakeLatched || emergencyBrakeTriggered;
 
         string context = BuildBrakeContext();
 
@@ -398,13 +399,13 @@ public class TrainController : MonoBehaviour
             SessionRunStats.Instance.RecordHarshBrake(severity, deceleration, jerk, context);
         }
 
-        if ((emergencyNow || brake >= 0.999f) && !emergencyBrakeActive && SessionRunStats.Instance != null)
+        if (emergencyBrakeCommanded && emergencyNow && !emergencyBrakeActive && SessionRunStats.Instance != null)
         {
             SessionRunStats.Instance.RecordEmergencyBrakeUsage(severity, deceleration, jerk, context);
         }
 
         harshBrakeActive = harshNow;
-        emergencyBrakeActive = emergencyNow || brake >= 0.999f;
+        emergencyBrakeActive = emergencyBrakeCommanded && emergencyNow;
         previousDeceleration = deceleration;
     }
 
